@@ -32,11 +32,10 @@ dialog{border:1px solid var(--border);border-radius:15px;width:min(540px,calc(10
 .mobile-app .sidebar{display:none}
 .mobile-app .main{margin:0}
 .mobile-app .topbar{position:sticky;top:0;z-index:2;height:69px;padding:0 16px}
-.mobile-app .desktop-title,.mobile-app .menu-toggle,.mobile-app .topbar .search{display:none}
+.mobile-app .desktop-title,.mobile-app .topbar .menu-toggle.icon-btn,.mobile-app .topbar .search{display:none}
 .mobile-app .top-actions{gap:7px}
 .mobile-app .mobile-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:800}
-.mobile-title small{display:block;font-size:10px;line-height:1.1;color:var(--muted)}
-.mobile-mark{width:39px;height:39px;border-radius:12px;background:var(--blue);color:white;display:grid;place-items:center}
+.mobile-brand-logo{display:block;width:104px;height:61px;object-fit:contain;object-position:left center}
 .mobile-app .topbar .icon-btn,.mobile-app .topbar .profile{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:14px}
 .mobile-app .topbar .profile>span:nth-child(2),.mobile-app .topbar .profile>svg{display:none}
 .mobile-app .topbar .avatar{width:37px;height:37px}
