@@ -75,6 +75,12 @@ public class MainActivity extends Activity {
         web.loadUrl("https://" + HOST + "/");
     }
 
+    @Override public void onBackPressed() {
+        web.evaluateJavascript("window.capMobileBack ? window.capMobileBack() : false", handled -> {
+            if (!"true".equals(handled)) super.onBackPressed();
+        });
+    }
+
     private static boolean isLocal(Uri uri) {
         return "https".equals(uri.getScheme()) && HOST.equals(uri.getHost());
     }

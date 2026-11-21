@@ -27,3 +27,50 @@ dialog{border:1px solid var(--border);border-radius:15px;width:min(540px,calc(10
     scrollbar-color: #8294b7 transparent;
   }
 }
+
+.mobile-tabs,.mobile-title,.mobile-search{display:none}
+.mobile-app .sidebar{display:none}
+.mobile-app .main{margin:0}
+.mobile-app .topbar{position:sticky;top:0;z-index:2;height:69px;padding:0 16px}
+.mobile-app .desktop-title,.mobile-app .menu-toggle,.mobile-app .topbar .search{display:none}
+.mobile-app .top-actions{gap:7px}
+.mobile-app .mobile-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:800}
+.mobile-title small{display:block;font-size:10px;line-height:1.1;color:var(--muted)}
+.mobile-mark{width:39px;height:39px;border-radius:12px;background:var(--blue);color:white;display:grid;place-items:center}
+.mobile-app .topbar .icon-btn,.mobile-app .topbar .profile{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:14px}
+.mobile-app .topbar .profile>span:nth-child(2),.mobile-app .topbar .profile>svg{display:none}
+.mobile-app .topbar .avatar{width:37px;height:37px}
+.mobile-app main{max-width:760px;padding:15px 16px calc(90px + env(safe-area-inset-bottom))}
+.mobile-app .date{font-size:12px;margin-bottom:10px}
+.mobile-app .hero{min-height:200px;border-radius:19px}
+.mobile-app .hero:before{left:39%;opacity:.55}
+.mobile-app .hero-content{max-width:96%;padding:17px}
+.mobile-app .hero h1{font-size:clamp(26px,7vw,38px)}
+.mobile-app .hero p{font-size:13px;margin-bottom:12px}
+.mobile-app .hero-btn,.mobile-app .section-head .btn{min-height:44px}
+.mobile-app .stats{grid-template-columns:repeat(2,minmax(0,1fr));margin:12px 0 20px}
+.mobile-app .stat{padding:11px;border-radius:14px}
+.mobile-app .dashboard-grid{grid-template-columns:minmax(0,1fr);gap:17px}
+.mobile-app .dashboard-grid .course-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(76%,240px);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:5px}
+.mobile-app .dashboard-grid .course{scroll-snap-align:start}
+.mobile-app .course-grid.wide{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.mobile-app .course-btn{min-height:44px}
+.mobile-app .toolbar select{min-height:44px}
+.mobile-app .section-head h2{font-size:20px}
+.mobile-app .mobile-tabs{position:fixed;z-index:3;inset:auto 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#fff;border-top:1px solid var(--border);box-shadow:0 -4px 20px #1523400c;padding:5px 5px max(6px,env(safe-area-inset-bottom))}
+.mobile-app .tab{min-height:58px;border:0;background:none;color:#54637c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:700;padding:1px}
+.mobile-app .tab span{display:grid;place-items:center;width:43px;height:29px;border-radius:20px}
+.mobile-app .tab[aria-current]{color:#174bc4}
+.mobile-app .tab[aria-current] span{background:#e5eeff}
+.mobile-profile{display:flex;gap:12px;align-items:center;padding:16px;margin-bottom:12px}
+.mobile-profile .avatar{width:48px;height:48px;font-size:16px}
+.mobile-profile h1{font-size:20px}
+.mobile-profile p{font-size:13px;color:var(--muted)}
+.profile-links{padding:10px;display:grid;gap:7px}
+.profile-links .btn{justify-content:flex-start;min-height:48px}
+.mobile-app dialog{margin:auto 0 0;width:100%;max-width:none;max-height:92dvh;border-radius:22px 22px 0 0;padding:18px 16px max(18px,env(safe-area-inset-bottom))}
+.mobile-app dialog .icon-btn,.mobile-app dialog .btn{min-height:44px}
+.mobile-app dialog .icon-btn{min-width:44px}
+.mobile-search-form{display:flex;gap:8px;margin:14px 0 4px}
+.mobile-search-form input{flex:1;min-width:0;border:1px solid var(--border);border-radius:9px;padding:9px}
+.mobile-app #toast{bottom:78px}

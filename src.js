@@ -1,7 +1,7 @@
 import './style.css';
 import logo from './assets/logo-cap-digital-scolaire.webp';
-import { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound } from 'lucide';
-const icons = { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound };
+import { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound, X } from 'lucide';
+const icons = { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound, X };
 const icon = (name, size = 20) => {
   const data = icons[name];
   if (!Array.isArray(data)) return '';
@@ -52,6 +52,13 @@ const tasks = [
   {id:'d2',title:'Schéma de la cellule',subject:'Sciences',detail:'À rendre le 25 novembre',theme:'mint',glyph:'FlaskConical'},
   {id:'d3',title:'Rédaction d’un récit',subject:'Français',detail:'À rendre le 27 novembre',theme:'peach',glyph:'BookOpen'}
 ];
+const androidApp = location.hostname === 'appassets.androidplatform.net';
+const compactScreen = matchMedia('(max-width: 720px)');
+function syncLayout() {
+  document.documentElement.classList.toggle('mobile-app', androidApp || compactScreen.matches);
+}
+compactScreen.addEventListener('change', syncLayout);
+syncLayout();
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
 const button = (label, glyph, action, style='primary') => '<button type="button" class="btn '+style+'" '+action+'>'+icon(glyph,17)+safe(label)+'</button>';
@@ -96,6 +103,7 @@ function rows(title,description,records,extra='',actions=()=>'', glyph='Clipboar
 function content() {
   switch(page) {
   case 'Tableau de bord': return dashboard();
+  case 'Profil': return profilePage();
   case 'Recherche': case 'Mes cours': case 'Mes publications': case 'Catalogue des cours': return catalog();
   case 'Mes devoirs': return rows(page,'Consultez les travaux et les dates de remise.',tasks,'', t=>role==='Élève'?button(homework.includes(t.id)?'Remis':'Remettre',homework.includes(t.id)?'Check':'Upload','data-task="'+t.id+'"','secondary'):'<span class="badge">'+(homework.includes(t.id)?'Remis':'À rendre')+'</span>');
   case 'Mes résultats': case 'Notes et remarques': case 'Suivi pédagogique': case 'Suivi de mon enfant':
@@ -104,13 +112,33 @@ function content() {
   case 'Messages': return rows(page,'Échanges au sein de la plateforme.',messages,button('Nouveau message','Plus','data-form="message"'),()=>'', 'Mail');
   case 'Responsables': case 'Programmeurs': return rows(page,'Les membres de cette équipe.',people.filter(p=>p.group===page),button('Ajouter un membre','Plus','data-form="person"'),()=>'', 'UsersRound');
   case 'Demandes techniques': return rows(page,'Suivez les interventions de la plateforme.',tickets,button('Nouvelle demande','Plus','data-form="ticket"'),t=>button(t.status,t.status==='Résolue'?'Check':'Circle','data-ticket="'+safe(t.id)+'"','secondary'), 'CodeXml');
-  case 'Aide et support': return heading(page,'Trouvez les réponses à vos questions.')+'<div class="panel faq"><details><summary>Comment accéder à mes cours ?</summary><p>Ouvrez Mes cours, choisissez votre niveau et sélectionnez le support souhaité.</p></details><details><summary>Comment changer d’espace ?</summary><p>Ouvrez le sélecteur en bas du menu pour explorer un autre rôle de démonstration.</p></details><details><summary>Où trouver mes échéances ?</summary><p>Les rendez-vous et dates de remise apparaissent dans Mon agenda.</p></details></div>';
+  case 'Aide et support': return heading(page,'Trouvez les réponses à vos questions.')+'<div class="panel faq"><details><summary>Comment accéder à mes cours ?</summary><p>Ouvrez Mes cours, choisissez votre niveau et sélectionnez le support souhaité.</p></details><details><summary>Comment changer d’espace ?</summary><p>Ouvrez « Changer d’espace » dans le menu ou dans l’onglet Profil pour explorer un autre rôle.</p></details><details><summary>Où trouver mes échéances ?</summary><p>Les rendez-vous et dates de remise apparaissent dans Mon agenda.</p></details></div>';
   default: return '';
   }
 }
+function profilePage() {
+  const profile = roles[role];
+  const links = [...profile.nav, ['Mon agenda','CalendarDays'], ['Messages','Mail'], ['Aide et support','CircleHelp']];
+  return '<div class="mobile-profile panel"><span class="avatar">'+initials(profile.name)+'</span><div><h1>'+safe(profile.name)+'</h1><p>'+safe(role==='Élève'?role+' · '+grade:role)+'</p></div></div>'
+    +'<div class="panel profile-links">'+button('Changer d’espace','ChevronsUpDown','data-action="roles"','secondary')
+    +links.map(([label,glyph])=>button(label,glyph,'data-page="'+safe(label)+'"','secondary')).join('')+'</div>';
+}
+function mobileTabs(profile) {
+  const [primary, secondary] = profile.nav;
+  const labels = role==='Élève'?['Cours','Devoirs']:role==='Professeur'?['Cours','Notes']:null;
+  const secondaryTab = secondary ? [secondary[0],secondary[1],labels?.[1] || ({Parent:'Devoirs',Responsable:'Cours'})[role] || 'Suivi'] : ['Messages','Mail','Messages'];
+  const tabs = [
+    ['Tableau de bord','LayoutDashboard','Accueil'],
+    [primary[0],primary[1],labels?.[0] || ({Parent:'Suivi',Coordonnateur:'Cours',Planificateur:'Planning',Direction:'Équipe',Responsable:'Équipe',Programmeur:'Demandes'})[role]],
+    secondaryTab, ['Mon agenda','CalendarDays','Agenda'], ['Profil',profile.icon,'Profil']
+  ];
+  return '<nav class="mobile-tabs" aria-label="Navigation principale">'+tabs.map(([target,glyph,label])=>
+    '<button class="tab" data-page="'+safe(target)+'" '+(target===page?'aria-current="page"':'')+'><span>'+icon(glyph,21)+'</span>'+safe(label)+'</button>'
+  ).join('')+'</nav>';
+}
 function render() {
   const profile=roles[role];
-  app.innerHTML='<div class="shell"><aside class="sidebar" id="sidebar"><button data-page="Tableau de bord" class="brand"><img class="brand-logo" src="'+logo+'" alt="Cap Digital Scolaire"></button><div class="navigation"><div class="nav-label">ESPACE DE TRAVAIL</div>'+[['Tableau de bord','LayoutDashboard'],...profile.nav,['Mon agenda','CalendarDays'],['Messages','Mail']].map(navButton).join('')+'<div class="nav-label support">ASSISTANCE</div>'+navButton(['Aide et support','CircleHelp'])+'</div><div class="sidebar-footer"><button class="role-switch" data-action="roles"><span class="role-avatar">'+icon(profile.icon,20)+'</span><span><b>Espace '+safe(role.toLowerCase())+'</b><small>Changer d’espace</small></span>'+icon('ChevronsUpDown',16)+'</button></div></aside><div class="main"><header class="topbar"><div class="top-title"><button class="icon-btn menu-toggle" data-action="menu" aria-label="Menu">'+icon('Menu')+'</button><b>'+safe(page)+'</b></div><div class="top-actions"><form id="search" class="search">'+icon('Search',18)+'<input name="q" aria-label="Rechercher un cours" placeholder="Rechercher…" value="'+safe(query)+'"><kbd>⌘ K</kbd></form><button class="icon-btn bell" data-action="notifications" aria-label="Notifications">'+icon('Bell',21)+'<i></i></button><button class="profile" data-action="roles" aria-label="Changer d’espace"><span class="avatar">'+initials(profile.name)+'</span><span><b>'+safe(profile.name)+'</b><small>'+safe(role==='Élève'?grade:role)+'</small></span>'+icon('ChevronDown',15)+'</button></div></header><main>'+content()+'</main></div></div>';
+  app.innerHTML='<div class="shell"><aside class="sidebar" id="sidebar"><button data-page="Tableau de bord" class="brand"><img class="brand-logo" src="'+logo+'" alt="Cap Digital Scolaire"></button><div class="navigation"><div class="nav-label">ESPACE DE TRAVAIL</div>'+[['Tableau de bord','LayoutDashboard'],...profile.nav,['Mon agenda','CalendarDays'],['Messages','Mail']].map(navButton).join('')+'<div class="nav-label support">ASSISTANCE</div>'+navButton(['Aide et support','CircleHelp'])+'</div><div class="sidebar-footer"><button class="role-switch" data-action="roles"><span class="role-avatar">'+icon(profile.icon,20)+'</span><span><b>Espace '+safe(role.toLowerCase())+'</b><small>Changer d’espace</small></span>'+icon('ChevronsUpDown',16)+'</button></div></aside><div class="main"><header class="topbar"><div class="top-title"><button class="icon-btn menu-toggle" data-action="menu" aria-label="Menu">'+icon('Menu')+'</button><b class="desktop-title">'+safe(page)+'</b><div class="mobile-title">'+(page==='Tableau de bord'?'<span class="mobile-mark">'+icon('GraduationCap',22)+'</span><span>Cap Digital<small>Scolaire</small></span>':'<span>'+safe(page)+'</span>')+'</div></div><div class="top-actions"><button class="icon-btn mobile-search" data-action="search" aria-label="Rechercher">'+icon('Search',21)+'</button><form id="search" class="search">'+icon('Search',18)+'<input name="q" aria-label="Rechercher un cours" placeholder="Rechercher…" value="'+safe(query)+'"><kbd>⌘ K</kbd></form><button class="icon-btn bell" data-action="notifications" aria-label="Notifications">'+icon('Bell',21)+'<i></i></button><button class="profile" data-action="roles" aria-label="Changer d’espace"><span class="avatar">'+initials(profile.name)+'</span><span><b>'+safe(profile.name)+'</b><small>'+safe(role==='Élève'?grade:role)+'</small></span>'+icon('ChevronDown',15)+'</button></div></header><main>'+content()+'</main></div>'+mobileTabs(profile)+'</div>';
 }
 function modal(title, body) {
   dialog.innerHTML='<div class="dialog-head"><h2>'+safe(title)+'</h2><button class="icon-btn" data-action="close" aria-label="Fermer">'+icon('X')+'</button></div>'+body;
@@ -226,6 +254,9 @@ document.addEventListener('click', e=>{
   if(d.ticket){tickets=tickets.map(t=>t.id===d.ticket?{...t,status:t.status==='Résolue'?'À traiter':'Résolue'}:t);write('cap-tickets',tickets);render();}
   if(d.role && roles[d.role]){role=d.role;write('cap-role',role);dialog.close();go('Tableau de bord');}
   if(d.action==='close') dialog.close();
+  if(d.action==='search') {
+    modal('Rechercher un cours','<form id="mobile-search" class="mobile-search-form"><input name="q" aria-label="Rechercher un cours" placeholder="Titre, matière ou niveau" autofocus required><button class="btn primary">Rechercher</button></form>');
+  }
   if(d.action==='menu') document.querySelector('#sidebar').classList.toggle('opened');
   if(d.action==='roles') modal('Choisir un espace','<p>Explorez les profils de démonstration.</p><div class="role-grid">'+Object.entries(roles).map(([name,p])=>button(name,p.icon,'data-role="'+safe(name)+'"',role===name?'primary':'secondary')).join('')+'</div>');
   if(d.action==='notifications') modal('Notifications','<div class="notification">'+events(3)+'</div>');
@@ -236,9 +267,10 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('submit',async e=>{
   e.preventDefault();
-  if(e.target.id==='search'){
+  if(e.target.id==='search' || e.target.id==='mobile-search'){
+    if(dialog.open) dialog.close();
     query=new FormData(e.target).get('q').trim();
-    page='Recherche';filter='Tous les cours';render();
+    page='Recherche';filter='Tous les cours';render();window.scrollTo(0,0);
   }
   if(e.target.id==='editor'){
     const submit=e.target.querySelector('button[type="submit"]');
@@ -253,3 +285,15 @@ document.addEventListener('submit',async e=>{
 });
 document.addEventListener('keydown', e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('#search input').focus();}});
 render();
+
+window.capMobileBack = () => {
+  if (dialog.open) {
+    dialog.close();
+    return true;
+  }
+  if (page !== 'Tableau de bord') {
+    go('Tableau de bord');
+    return true;
+  }
+  return false;
+};
