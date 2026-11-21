@@ -127,7 +127,7 @@ function openCourse(id) {
   const c=courseList().find(x=>x.id===id);
   if (!c) return;
   const description=c.description || summaries[id];
-  const media=c.url?(c.format==='Vidéo'?'<video controls src="'+safe(c.url)+'"></video>':'<p><a class="btn secondary" href="'+safe(c.url)+'" download="'+safe(c.title)+'.pdf">Télécharger le PDF</a></p>'):'';
+  const media=c.url?(c.format==='Vidéo'?'<video controls src="'+safe(c.url)+'"></video>':'<p>'+button('Télécharger le PDF','Download','data-pdf="'+safe(c.id)+'"','secondary')+'</p>'):'';
   modal(c.title,'<p class="dialog-meta">'+safe(c.subject)+' · '+safe(c.grade)+' · '+safe(c.format)+'</p><p>'+safe(description)+'</p>'+media+(!c.url&&c.format==='PDF'?button('Télécharger le PDF','Download','data-pdf="'+safe(c.id)+'"','secondary'):'')+(role==='Élève'?'<div class="dialog-actions">'+button(progress(c)===100?'Terminé':'Marquer comme terminé','Check','data-complete="'+safe(c.id)+'" '+(progress(c)===100?'disabled':''))+'</div>':''));
 }
 const input=(name,label,type='text',args='')=>'<label>'+label+'<input required name="'+name+'" type="'+type+'" '+args+'></label>';
@@ -176,6 +176,12 @@ async function saveForm(form) {
   dialog.close(); render(); notify('Enregistrement effectué.');
 }
 function downloadPdf(c) {
+  const filename=(c.url ? c.title : c.id)+'.pdf';
+  if(c.url){
+    if(window.CapAndroid) window.CapAndroid.savePdf(filename,c.url.split(',')[1]);
+    else downloadLink(c.url,filename);
+    return;
+  }
   const clean=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^ -~]/g,'-').replace(/[()\\]/g,'\\$&');
   const words=(summaries[c.id]||c.description||'').split(' ');
   const lines=[clean(c.title),''];
@@ -188,8 +194,19 @@ function downloadPdf(c) {
   const offsets=objects.map((o,i)=>{const offset=pdf.length;pdf+=(i+1)+' 0 obj\n'+o+'\nendobj\n';return offset;});
   const xref=pdf.length;
   pdf+='xref\n0 6\n0000000000 65535 f \n'+offsets.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+  if(window.CapAndroid) {
+    window.CapAndroid.savePdf(filename,btoa(pdf));
+    return;
+  }
   const url=URL.createObjectURL(new Blob([pdf],{type:'application/pdf'}));
-  const link=document.createElement('a');link.href=url;link.download=c.id+'.pdf';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  downloadLink(url,filename);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function downloadLink(url,filename) {
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=filename;
+  link.click();
 }
 document.addEventListener('click', e=>{
   const b=e.target.closest('button');
