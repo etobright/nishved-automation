@@ -16,3 +16,14 @@ dialog{border:1px solid var(--border);border-radius:15px;width:min(540px,calc(10
 .brand:has(.brand-logo){padding:0;width:100%;justify-content:center}
 .brand-logo{display:block;width:100%;max-width:172px;height:auto;border-radius:10px}
 .sidebar:has(.brand-logo) .navigation{margin-top:26px}
+
+@media (hover: hover) and (pointer: fine) {
+  .sidebar .navigation {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .sidebar .navigation:hover {
+    scrollbar-color: #8294b7 transparent;
+  }
+}
