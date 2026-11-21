@@ -12,3 +12,7 @@ dialog{border:1px solid var(--border);border-radius:15px;width:min(540px,calc(10
 @media(max-width:980px){.dashboard-grid{grid-template-columns:1fr}.agenda{max-width:none}.agenda-head p,.event h3,.event p{font-size:12px}.course-body{padding:13px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.sidebar{display:none;top:59px;width:230px;box-shadow:7px 0 20px #0d183d3d}.sidebar.opened{display:flex}.main{margin-left:0}.topbar{height:59px;padding:0 12px}.menu-toggle{display:grid}.top-title{font-size:13px;gap:7px}.top-actions{gap:7px}.profile>span:nth-child(2),.profile>svg,.search kbd{display:none}.search{height:34px;padding:0 6px}.search input{width:78px;font-size:12px}.icon-btn,.avatar{width:31px;height:31px}main{padding:16px 13px 28px}.hero{min-height:222px}.hero-content{padding:18px;max-width:81%}.hero:before{left:30%;opacity:.55}.hero h1{letter-spacing:-.8px}.hero p{font-size:13px}.stats{margin:13px 0 19px;gap:8px}.section-head h2{font-size:18px}.section-head p{font-size:12px}.section-head .link{font-size:11px;gap:3px}}
 @media(max-width:470px){.course-grid{grid-template-columns:1fr}.course-art{height:111px}.hero-content{max-width:94%}.top-title b{max-width:105px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.search input{width:65px}.search svg{width:13px}.section-head{flex-wrap:wrap}}
+
+.brand:has(.brand-logo){padding:0;width:100%;justify-content:center}
+.brand-logo{display:block;width:100%;max-width:172px;height:auto;border-radius:10px}
+.sidebar:has(.brand-logo) .navigation{margin-top:26px}
