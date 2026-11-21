@@ -1,5 +1,5 @@
 import './style.css';
-import logo from './assets/logo-cap-digital-scolaire.jpeg';
+import logo from './assets/logo-cap-digital-scolaire.webp';
 import { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound } from 'lucide';
 const icons = { ArrowRight, Bell, BookOpen, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, Check, ChevronDown, ChevronsUpDown, Circle, CircleHelp, CirclePlay, ClipboardList, CodeXml, Download, FileText, FlaskConical, GraduationCap, LayoutDashboard, Mail, Menu, Play, Plus, Presentation, School, Search, Sigma, Trophy, Upload, UsersRound };
 const icon = (name, size = 20) => {
